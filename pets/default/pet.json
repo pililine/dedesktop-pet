@@ -1,0 +1,67 @@
+{
+  "id": "default",
+  "displayName": "牛牛",
+  "description": "一只会陪你使用电脑、敲键盘和看书的黑白猫像素宠物。",
+  "spritesheet": "spritesheet.webp",
+  "atlas": {
+    "columns": 8,
+    "rows": 9
+  },
+  "defaultScale": 1,
+  "animations": {
+    "idle": {
+      "row": 0,
+      "frames": 6,
+      "frameDurationMs": 160,
+      "loop": true
+    },
+    "walkRight": {
+      "row": 1,
+      "frames": 8,
+      "frameDurationMs": 100,
+      "loop": true
+    },
+    "walkLeft": {
+      "row": 2,
+      "frames": 8,
+      "frameDurationMs": 100,
+      "loop": true
+    },
+    "interaction": {
+      "row": 3,
+      "frames": 4,
+      "frameDurationMs": 120,
+      "loop": false
+    },
+    "jump": {
+      "row": 4,
+      "frames": 5,
+      "frameDurationMs": 100,
+      "loop": false
+    },
+    "failed": {
+      "row": 5,
+      "frames": 8,
+      "frameDurationMs": 140,
+      "loop": false
+    },
+    "sleep": {
+      "row": 6,
+      "frames": 6,
+      "frameDurationMs": 250,
+      "loop": true
+    },
+    "working": {
+      "row": 7,
+      "frames": 6,
+      "frameDurationMs": 140,
+      "loop": true
+    },
+    "review": {
+      "row": 8,
+      "frames": 6,
+      "frameDurationMs": 180,
+      "loop": true
+    }
+  }
+}

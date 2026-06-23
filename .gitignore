@@ -1,0 +1,26 @@
+.DS_Store
+node_modules/
+dist/
+src-tauri/target/
+src-tauri/gen/
+*.log
+.env
+.env.*
+!.env.example
+coverage/
+.tools/
+
+# Build artifacts / installers (never commit binaries)
+*.app
+*.dmg
+*.exe
+*.msi
+*.nsis
+
+# Editor / OS temp files
+*.swp
+*.swo
+*~
+*.tmp
+.idea/
+Thumbs.db

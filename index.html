@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Desktop Pet</title>
+  </head>
+  <body>
+    <main id="app" aria-live="polite">
+      <canvas id="pet-canvas" aria-label="Desktop Pet"></canvas>
+      <section id="error-panel" class="error-panel" hidden>
+        <strong>宠物加载失败</strong>
+        <p id="error-message"></p>
+        <small>请检查 pets/default/pet.json 与 spritesheet.webp。</small>
+      </section>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
