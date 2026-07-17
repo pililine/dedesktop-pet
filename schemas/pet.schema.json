@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Desktop Pet package (pet.json)",
+  "type": "object",
+  "required": ["id", "spritesheet", "atlas", "animations"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "displayName": { "type": "string" },
+    "description": { "type": "string" },
+    "spritesheet": { "type": "string", "pattern": "^(?!/)(?!.*\\.\\.)(?!.*:).+", "description": "包内相对路径，禁止绝对/父级/带 scheme" },
+    "atlas": {
+      "type": "object", "required": ["columns", "rows"],
+      "properties": { "columns": { "type": "integer", "minimum": 1 }, "rows": { "type": "integer", "minimum": 1 } }
+    },
+    "defaultScale": { "type": "number", "minimum": 0.25, "maximum": 4 },
+    "animations": {
+      "type": "object", "required": ["idle"], "minProperties": 1,
+      "additionalProperties": {
+        "type": "object", "required": ["row", "frames", "frameDurationMs", "loop"],
+        "properties": {
+          "row": { "type": "integer", "minimum": 0 },
+          "frames": { "type": "integer", "minimum": 1 },
+          "frameDurationMs": { "type": "number", "minimum": 16 },
+          "loop": { "type": "boolean" },
+          "pingPong": { "type": "boolean" }
+        }
+      }
+    }
+  },
+  "$comment": "运行时权威校验在 apps/desktop-pet/src/pet-config.ts 与 pet_factory/qa/validate.py；row<rows、frames<=columns、图集整除等跨字段规则由二者执行。"
+}

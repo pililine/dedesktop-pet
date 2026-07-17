@@ -9,6 +9,9 @@ on:
 permissions:
   contents: read
 
+env:
+  APP_DIR: apps/desktop-pet
+
 jobs:
   build:
     strategy:
@@ -31,6 +34,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: apps/desktop-pet/package-lock.json
 
       - uses: dtolnay/rust-toolchain@stable
         with:
@@ -38,12 +42,14 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
         with:
-          workspaces: src-tauri
+          workspaces: apps/desktop-pet/src-tauri
 
       - name: Install dependencies
+        working-directory: apps/desktop-pet
         run: npm ci
 
       - name: Frontend checks
+        working-directory: apps/desktop-pet
         run: |
           npm run typecheck
           npm run test
@@ -52,7 +58,7 @@ jobs:
           npm run build
 
       - name: Rust checks
-        working-directory: src-tauri
+        working-directory: apps/desktop-pet/src-tauri
         run: |
           cargo fmt --check
           cargo test
@@ -63,6 +69,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          projectPath: apps/desktop-pet
           args: ${{ matrix.bundle_args }}
 
       - name: Upload installers
@@ -71,6 +78,6 @@ jobs:
           name: ${{ matrix.artifact_name }}-${{ github.sha }}
           if-no-files-found: error
           path: |
-            src-tauri/target/release/bundle/dmg/*.dmg
-            src-tauri/target/release/bundle/macos/*.app
-            src-tauri/target/release/bundle/nsis/*.exe
+            apps/desktop-pet/src-tauri/target/release/bundle/dmg/*.dmg
+            apps/desktop-pet/src-tauri/target/release/bundle/macos/*.app
+            apps/desktop-pet/src-tauri/target/release/bundle/nsis/*.exe

@@ -5,7 +5,7 @@
   "spritesheet": "spritesheet.webp",
   "atlas": {
     "columns": 8,
-    "rows": 9
+    "rows": 16
   },
   "defaultScale": 1,
   "animations": {
@@ -62,6 +62,48 @@
       "frames": 6,
       "frameDurationMs": 180,
       "loop": true
+    },
+    "wave": {
+      "row": 9,
+      "frames": 8,
+      "frameDurationMs": 400,
+      "loop": false
+    },
+    "groom": {
+      "row": 10,
+      "frames": 8,
+      "frameDurationMs": 400,
+      "loop": false
+    },
+    "lieDown": {
+      "row": 11,
+      "frames": 8,
+      "frameDurationMs": 300,
+      "loop": false
+    },
+    "sleepDeep": {
+      "row": 12,
+      "frames": 8,
+      "frameDurationMs": 400,
+      "loop": true
+    },
+    "turnBack": {
+      "row": 13,
+      "frames": 8,
+      "frameDurationMs": 300,
+      "loop": false
+    },
+    "backRest": {
+      "row": 14,
+      "frames": 8,
+      "frameDurationMs": 400,
+      "loop": true
+    },
+    "wakeFront": {
+      "row": 15,
+      "frames": 8,
+      "frameDurationMs": 300,
+      "loop": false
     }
   }
 }

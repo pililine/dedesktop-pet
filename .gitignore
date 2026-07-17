@@ -1,8 +1,8 @@
 .DS_Store
 node_modules/
 dist/
-src-tauri/target/
-src-tauri/gen/
+apps/desktop-pet/src-tauri/target/
+apps/desktop-pet/src-tauri/gen/
 *.log
 .env
 .env.*
@@ -24,3 +24,19 @@ coverage/
 *.tmp
 .idea/
 Thumbs.db
+
+# Private production areas — never publish to the public repo.
+# Raw photos, generation workspaces and internal reports may contain
+# personal data or user-absolute paths; the public repo ships only the
+# app, the factory tooling and the built pet packages.
+source-assets/
+work/
+reports/
+archive/
+releases/
+memory/
+.claude/
+
+# Python bytecode
+__pycache__/
+*.pyc

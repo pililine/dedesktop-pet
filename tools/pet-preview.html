@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pet Preview</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        background: #1f2937;
+        color: #e5e7eb;
+        display: flex;
+        gap: 24px;
+        padding: 24px;
+      }
+      .panel {
+        min-width: 260px;
+      }
+      h1 {
+        font-size: 16px;
+        margin: 0 0 12px;
+      }
+      label {
+        display: block;
+        margin: 10px 0 4px;
+        font-size: 12px;
+        color: #9ca3af;
+      }
+      input,
+      select {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 6px 8px;
+        border-radius: 6px;
+        border: 1px solid #374151;
+        background: #111827;
+        color: #e5e7eb;
+      }
+      .stage {
+        flex: 1;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        background:
+          linear-gradient(45deg, #374151 25%, transparent 25%) -8px 0/16px 16px,
+          linear-gradient(-45deg, #374151 25%, transparent 25%) -8px 0/16px 16px,
+          linear-gradient(45deg, transparent 75%, #374151 75%) -8px 0/16px 16px,
+          linear-gradient(-45deg, transparent 75%, #374151 75%) -8px 0/16px 16px,
+          #4b5563;
+      }
+      canvas {
+        image-rendering: pixelated;
+      }
+      .hint {
+        font-size: 11px;
+        color: #6b7280;
+        margin-top: 16px;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="panel">
+      <h1>桌宠预览（独立工具）</h1>
+      <label>Pet ID（pets/&lt;id&gt;/）</label>
+      <input id="pet" value="wangdulan" />
+      <label>动画</label>
+      <select id="anim"></select>
+      <label>缩放</label>
+      <input id="scale" type="range" min="0.5" max="4" step="0.25" value="2" />
+      <div class="hint">
+        用法：在项目根目录运行 <code>python3 -m http.server 8080</code>，<br />
+        浏览器打开 <code>http://localhost:8080/tools/pet-preview.html</code>。<br />
+        这是独立预览，不依赖 Tauri App，也不影响任何宠物文件。
+      </div>
+    </div>
+    <div class="stage"><canvas id="c"></canvas></div>
+
+    <script type="module">
+      const $ = (id) => document.getElementById(id);
+      const canvas = $("c");
+      const ctx = canvas.getContext("2d", { alpha: true });
+      let cfg = null,
+        img = null,
+        frameW = 0,
+        frameH = 0,
+        anim = null,
+        frame = 0,
+        last = 0,
+        acc = 0,
+        raf = 0;
+
+      async function load(petId) {
+        const base = `../pets/${encodeURIComponent(petId)}/`;
+        cfg = await (await fetch(base + "pet.json", { cache: "no-store" })).json();
+        img = new Image();
+        await new Promise((res, rej) => {
+          img.onload = res;
+          img.onerror = () => rej(new Error("spritesheet load failed"));
+          img.src = base + (cfg.spritesheet || "spritesheet.webp");
+        });
+        frameW = img.naturalWidth / cfg.atlas.columns;
+        frameH = img.naturalHeight / cfg.atlas.rows;
+        const sel = $("anim");
+        sel.innerHTML = "";
+        for (const name of Object.keys(cfg.animations)) {
+          const o = document.createElement("option");
+          o.value = o.textContent = name;
+          sel.appendChild(o);
+        }
+        setAnim(cfg.animations.idle ? "idle" : Object.keys(cfg.animations)[0]);
+      }
+
+      function setAnim(name) {
+        anim = cfg.animations[name];
+        frame = 0;
+        acc = 0;
+        $("anim").value = name;
+      }
+
+      function resize() {
+        const scale = parseFloat($("scale").value);
+        const dpr = Math.max(1, window.devicePixelRatio || 1);
+        canvas.style.width = frameW * scale + "px";
+        canvas.style.height = frameH * scale + "px";
+        canvas.width = Math.round(frameW * scale * dpr);
+        canvas.height = Math.round(frameH * scale * dpr);
+      }
+
+      function draw() {
+        const scale = parseFloat($("scale").value);
+        const dpr = Math.max(1, window.devicePixelRatio || 1);
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(
+          img,
+          frame * frameW,
+          anim.row * frameH,
+          frameW,
+          frameH,
+          0,
+          0,
+          frameW * scale,
+          frameH * scale,
+        );
+      }
+
+      function tick(t) {
+        raf = requestAnimationFrame(tick);
+        if (!anim || !img) return;
+        const dt = last ? Math.min(250, t - last) : 0;
+        last = t;
+        acc += dt;
+        while (acc >= anim.frameDurationMs) {
+          acc -= anim.frameDurationMs;
+          if (frame + 1 < anim.frames) frame++;
+          else if (anim.loop) frame = 0;
+          else {
+            frame = 0;
+            setAnim("idle" in cfg.animations ? "idle" : $("anim").value);
+          }
+        }
+        resize();
+        draw();
+      }
+
+      $("pet").addEventListener("change", (e) => load(e.target.value.trim()).catch(alert));
+      $("anim").addEventListener("change", (e) => setAnim(e.target.value));
+      load($("pet").value).catch((e) => alert(e.message));
+      raf = requestAnimationFrame(tick);
+    </script>
+  </body>
+</html>

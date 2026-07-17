@@ -1,0 +1,10 @@
+node_modules
+dist
+src-tauri/target
+work
+*.webp
+*.png
+*.gif
+*.ico
+*.icns
+src-tauri/gen

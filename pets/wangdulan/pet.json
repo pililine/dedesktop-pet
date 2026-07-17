@@ -1,0 +1,81 @@
+{
+  "id": "wangdulan",
+  "displayName": "王杜兰",
+  "description": "照片级黑白奶牛猫 v2：正面坐姿呆萌待机，会跑步、跳跃、挥爪打招呼、看书和闹小情绪。",
+  "spritesheet": "spritesheet.webp",
+  "defaultScale": 1,
+  "rendering": "smooth",
+  "movement": {
+    "speedPxPerSec": 40,
+    "rampMs": 220
+  },
+  "behavior": {
+    "idleMinMs": 8000,
+    "idleMaxMs": 20000,
+    "activityHoldMinMs": 8000,
+    "activityHoldMaxMs": 14000,
+    "specialCooldownMs": 30000,
+    "noImmediateRepeat": true
+  },
+  "atlas": {
+    "columns": 8,
+    "rows": 9
+  },
+  "animations": {
+    "idle": {
+      "row": 0,
+      "frames": 6,
+      "frameDurationMs": 180,
+      "loop": true,
+      "pingPong": true
+    },
+    "walkRight": {
+      "row": 1,
+      "frames": 8,
+      "frameDurationMs": 90,
+      "loop": true
+    },
+    "walkLeft": {
+      "row": 2,
+      "frames": 8,
+      "frameDurationMs": 90,
+      "loop": true
+    },
+    "jump": {
+      "row": 3,
+      "frames": 5,
+      "frameDurationMs": 100,
+      "loop": false
+    },
+    "wave": {
+      "row": 4,
+      "frames": 4,
+      "frameDurationMs": 200,
+      "loop": false
+    },
+    "review": {
+      "row": 5,
+      "frames": 6,
+      "frameDurationMs": 200,
+      "loop": true
+    },
+    "failed": {
+      "row": 6,
+      "frames": 8,
+      "frameDurationMs": 150,
+      "loop": false
+    },
+    "running": {
+      "row": 7,
+      "frames": 6,
+      "frameDurationMs": 70,
+      "loop": true
+    },
+    "waiting": {
+      "row": 8,
+      "frames": 6,
+      "frameDurationMs": 220,
+      "loop": true
+    }
+  }
+}
