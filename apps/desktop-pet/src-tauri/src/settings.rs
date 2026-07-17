@@ -130,7 +130,11 @@ fn sanitize(settings: &mut AppSettings) {
     {
         settings.scale = 1.0;
     }
-    if settings.selected_pet.trim().is_empty() {
+    // Legacy migration: builds up to 0.2.0 hard-coded "default" and offered no
+    // pet chooser, so a stored "default" is an implicit leftover, not a user
+    // decision. Uninstalling does not clear the config dir, so without this
+    // rewrite upgraded installs would keep opening the old pet forever.
+    if settings.selected_pet.trim().is_empty() || settings.selected_pet == "default" {
         settings.selected_pet = DEFAULT_PET.to_owned();
     }
 }
@@ -147,5 +151,25 @@ mod tests {
         };
         sanitize(&mut settings);
         assert_eq!(settings.scale, 1.0);
+    }
+
+    #[test]
+    fn legacy_default_pet_migrates_to_flagship() {
+        let mut settings = AppSettings {
+            selected_pet: "default".to_owned(),
+            ..AppSettings::default()
+        };
+        sanitize(&mut settings);
+        assert_eq!(settings.selected_pet, super::DEFAULT_PET);
+    }
+
+    #[test]
+    fn explicit_other_pet_is_kept() {
+        let mut settings = AppSettings {
+            selected_pet: "some-future-pet".to_owned(),
+            ..AppSettings::default()
+        };
+        sanitize(&mut settings);
+        assert_eq!(settings.selected_pet, "some-future-pet");
     }
 }
