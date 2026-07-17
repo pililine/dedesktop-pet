@@ -9,6 +9,11 @@ use tauri::{AppHandle, Manager};
 
 use crate::error::{AppError, AppResult};
 
+/// Pet shown on a fresh install (and whenever the stored id is unusable).
+/// Wangdulan is the flagship pet; "default" (niuniu) stays available via
+/// settings.json for users who explicitly select it.
+pub const DEFAULT_PET: &str = "wangdulan";
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct StoredPosition {
@@ -36,7 +41,7 @@ impl Default for AppSettings {
             always_on_top: true,
             auto_move: true,
             autostart: false,
-            selected_pet: "default".to_owned(),
+            selected_pet: DEFAULT_PET.to_owned(),
         }
     }
 }
@@ -126,7 +131,7 @@ fn sanitize(settings: &mut AppSettings) {
         settings.scale = 1.0;
     }
     if settings.selected_pet.trim().is_empty() {
-        settings.selected_pet = "default".to_owned();
+        settings.selected_pet = DEFAULT_PET.to_owned();
     }
 }
 

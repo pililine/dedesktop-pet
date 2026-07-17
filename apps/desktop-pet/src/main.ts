@@ -129,7 +129,7 @@ async function start(): Promise<void> {
   const settings = await controller.getSettings();
   autoMove = settings.autoMove;
 
-  const petId = settings.selectedPet || "default";
+  const petId = settings.selectedPet || "wangdulan";
   const configUrl = petConfigUrl(petId);
   // Controlled diagnostics: full URLs go to the dev console only; the on-screen
   // error panel stays sanitized.
